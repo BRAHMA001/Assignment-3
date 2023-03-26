@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My Website</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+  <header>
+    <h1>MILKY BAR</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="shop.html">Shop</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+        <li class="cart-icon"><a href="#"><img src="cart-icon.png"></a>
+          <ul class="cart-dropdown">
+            <!-- Items added to the cart will be displayed here -->
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Featured Candies</h2>
+    <section>
+      <article>
+        <h3>Chocolate Bar</h3>
+        <img
+          src="https://i5.walmartimages.com/asr/95e299c4-1ef9-4b8c-a913-beefdc88f241.2b99b7af69453f1e5ccf4d69c1568201.jpeg"
+          alt="Chocolate Bar">
+        <p>A delicious chocolate bar made from the finest cocoa beans.</p>
+        <button class="add-to-cart" data-name="Chocolate Bar" data-price="2.99">Add to Cart</button>
+      </article>
+
+      <article>
+        <h3>Gummy Bears</h3>
+        <img src="https://foodsguy.com/wp-content/uploads/2021/06/11-Best-Gummy-Bears-scaled.jpg" alt="Gummy Bears">
+        <p>A bag of assorted gummy bears in fun flavors and colors.</p>
+        <button class="add-to-cart" data-name="Gummy Bears" data-price="1.99">Add to Cart</button>
+      </article>
+
+      <article>
+        <h3>Lollipop</h3>
+        <img src="https://i.pinimg.com/originals/1b/7d/aa/1b7daad93f6560db10162a906efcd52b.jpg" alt="Lollipop">
+        <p>A classic swirl lollipop that's perfect for satisfying your sweet tooth.</p>
+        <button class="add-to-cart" data-name="Lollipop" data-price="0.99">Add to Cart</button>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Candy Store 2023</p>
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      var cartItems = [];
+      var cartDropdown = $('.cart-dropdown');
+      var cartIcon = $('.cart-icon');
+
+      // Function to update the cart icon
+      function updateCartIcon() {
+        var cartTotal = 0;
+        for (var i = 0; i < cartItems.length; i++) {
+          cartTotal += cartItems[i].quantity;
+        }
+        cartIcon.find('.cart-count').remove();
+        cartIcon.append('<span class="cart-count">' + cartTotal + '</span>');
+      }
+
+      // Function to update the cart dropdown
+      function updateCartDropdown
+        () {
+        cartDropdown.empty();
+        if (cartItems.length === 0) {
+          cartDropdown.append('<p>Your cart is empty.</p>');
+        } else {
+          var cartTotal = 0;
+          for (var i = 0; i < cartItems.length; i++) {
+            var item = cartItems[i];
+            var itemTotal = item.price * item.quantity;
+            cartTotal += itemTotal;
+            cartDropdown.append('<div class="cart-item"><span class="cart-item-name">' + item.name + '</span><span class="cart-item-price">' + item.price.toFixed(2) + '</span><span class="cart-item-quantity">' + item.quantity + '</span><span class="cart-item-total">' + itemTotal.toFixed(2) + '</span><button class="remove-from-cart" data-index="' + i + '">Remove</button></div>');
+          }
+          cartDropdown.append('<p class="cart-total">Total: $' + cartTotal.toFixed(2) + '</p><button class="checkout">Checkout</button>');
+        }
+      }  // Add item to cart on click of "Add to Cart" button
+      $('.add-to-cart').on('click', function () {
+        var name = $(this).data('name');
+        var price = $(this).data('price');
+        var found = false;
+        for (var i = 0; i < cartItems.length; i++) {
+          if (cartItems[i].name === name) {
+            cartItems[i].quantity++;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          cartItems.push({
+            name: name,
+            price: price,
+            quantity: 1
+          });
+        }
+        updateCartIcon();
+        updateCartDropdown();
+      });
+
+      // Remove item from cart on click of "Remove" button
+      $(document).on('click', '.remove-from-cart', function () {
+        var index = $(this).data('index');
+        cartItems.splice(index, 1);
+        updateCartIcon();
+        updateCartDropdown();
+      });
+    });
+  </script>
+</body>
+
+</html>
